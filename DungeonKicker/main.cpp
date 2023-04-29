@@ -15,7 +15,7 @@
 #include "SystemsInitialization.h"
 #include "CheckIfNULL.h"
 #include"InfoBox.h"
-
+#include <vector>
 int main(int argc,char** argv)
 {
 	//Quiz();
@@ -46,13 +46,9 @@ int main(int argc,char** argv)
 	SDL_Texture* testImage = IMG_LoadTexture(renderer, "assets/girlIdle.png");
 	CheckifImageIsNULL(testImage);
 
-	int items[10];
-	for (int i = 0; i <= 9; i++)
-		items[i] = 0;
 
-	items[0] = 0;
 	
-
+	std::vector<int> items(10,0);
 	for (int i = 0; i <= 9; i++)
 		std::cout << "Item in slot "<<i+1<<" is " << items[i] << std::endl;
 

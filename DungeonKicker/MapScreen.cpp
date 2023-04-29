@@ -2,12 +2,12 @@
 #include"InfoBox.h"
 
 
-MapScreen::MapScreen(SDL_Renderer* renderer, Hero* hero,int* items)
+MapScreen::MapScreen(SDL_Renderer* renderer, Hero* hero, std::vector<int> items)
 {
 	srand(time(NULL));
 	this->renderer = renderer;
 	this->hero = hero;
-	this->items = items;
+	this->inventory = items;
 
 	hero->SetHP(100);
 
@@ -33,24 +33,25 @@ MapScreen::~MapScreen()
 
 void MapScreen::ItemFound()
 {
-	int item = rand() % 4 + 1;
-	bool freeSlotFound = true;  //κανονικά αυτό είναι false αλλά μου έβγαζε bug full.στο array items δεν γεμίζουν οι τιμές με 0. Αλέξανδρος
+	int randomItem = rand() % 4 + 1;
+	bool freeSlotFound = false;  //κανονικά αυτό είναι false αλλά μου έβγαζε bag full.στο array items δεν γεμίζουν οι τιμές με 0. Αλέξανδρος
 	//επίσης πως να δωσω αίμα στον ηρωα μοθ
-	for (int i = 0; i > 10; i++) {
-		if (items[i] == 0) {
+	for (int i = 0; i < 10; i++)
+	{
+		if (inventory[i] == 0) {
 			freeSlotFound = true;
-			items[i] = item;
+			inventory[i] = randomItem;
 			break;
 		}
 	}
-	if (freeSlotFound) {
-		if (item == 1)
+ 	if (freeSlotFound) {
+		if (randomItem == 1)
 			infoBox.SetText("Found a chocolate!!");
-		else if (item == 2)
+		else if (randomItem == 2)
 			infoBox.SetText("Found a grenade!!");
-		else if (item == 3)
+		else if (randomItem == 3)
 			infoBox.SetText("Found an ATK boost candy!!");
-		else if (item == 4)
+		else if (randomItem == 4)
 			infoBox.SetText("Found a DEF boost candy!!");
 	}
 	else
@@ -93,14 +94,15 @@ void MapScreen::update()
 					std::list<MapObject>::iterator it;
 					for (it = mapObjects.begin(); it != mapObjects.end(); ++it) {
 						if (it->active) {
-							if (hero_x == it->x && hero_y == it->y) {
+							if (hero_x == it->x && hero_y == it->y)
+							{
 								it->active = false;
 								if (it->type == 3)
 								{
-									BattleScreen battle(renderer, hero, items);
+									/*BattleScreen battle(renderer, hero, items);
 									battle.Update();
 									if (battle.quit == true)
-										quit = true;
+										quit = true;*/
 								}
 								else if (it->type == 2)
 								{
@@ -146,22 +148,8 @@ void MapScreen::draw()
 {
 	SDL_Rect tileRect = { 0,0,32,32 };
 
-	for (int x = 0; x <= 9; x++) {
-		for (int y = 0; y <= 9; y++)
-		{
-			if (Map[x][y] == 1)
-			{
-				SDL_SetRenderDrawColor(renderer, 77, 55, 39, 255);
-			}
-			else if (Map[x][y] == 0)
-			{
-				SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-			}
-			tileRect.x = x * tileRect.w;
-			tileRect.y = y * tileRect.h;
-			SDL_RenderFillRect(renderer, &tileRect);
-		}
-	}
+	DrawColors(tileRect);
+	
 
 	tileRect.x = heroObj.x * tileRect.w;
 	tileRect.y = heroObj.y * tileRect.h;
@@ -198,46 +186,67 @@ void MapScreen::ScreenMapAndRender()
 	std::fstream mapFile("assets/map.txt");
 	if (mapFile.is_open())
 	{
-		for (int y = 0; y <= 9; y++) {
-			for (int x = 0; x <= 9; x++) {
+		for (int y = 0; y <= 9; y++)
+		{
+			for (int x = 0; x <= 9; x++)
+			{
 				char grid;
 				mapFile >> grid;
 				if (grid == '0')
-					Map[x][y] = 0;
+				{
+					Map[x][y] = TextureTypes::WALL;
+				}
 				else
-					Map[x][y] = 1;
+				{
+					Map[x][y] = TextureTypes::GROUND;
+				}
 
-				if (grid == 'h') {
+				if (grid == 'h') 
+				{
 					heroObj.type = 1; heroObj.x = x; heroObj.y = y;
 				}
-				else if (grid == 'd') {
+				else if (grid == 'd')
+				{
 					door.type = 2; door.x = x; door.y = y;
 				}
-				else if (grid == 'c') {
-					MapObject chest;
-					chest.type = 4; chest.x = x; chest.y = y;
-					mapObjects.push_back(chest);
+				else if (grid == 'c')
+				{
+					mapObjects.push_back(MapObject{ CHEST, x,y });
+
 				}
-				else if (grid == 'g') {
-					MapObject glob;
-					glob.type = 3;
-					glob.x = x; glob.y = y;
-					mapObjects.push_back(glob);
+				else if (grid == 'g')
+				{
+					mapObjects.push_back(MapObject{ GLOB, x,y }); 
+
 				}
-				else if (grid == 'm') {
-					MapObject mimic;
-					mimic.type = 4;
-					mimic.x = x; mimic.y = y;
-					mapObjects.push_back(mimic);
+				else if (grid == 'm') 
+				{
+					mapObjects.push_back(MapObject{ MIMIC, x,y }); 
+
 				}
-				else if (grid == '0') {
-					MapObject rocks;
-					rocks.type = 5;
-					rocks.x = x; rocks.y = y;
-					mapObjects.push_back(rocks);
+				else if (grid == '0')
+				{
+					mapObjects.push_back(MapObject{ROCKTILE, x,y }); 
 				}
 			}
 		}
 	}
 	mapFile.close();
+}
+
+void MapScreen::DrawColors(SDL_Rect tileRect)
+{
+	for (int x = 0; x <= 9; x++) {
+		for (int y = 0; y <= 9; y++)
+		{
+			if (Map[x][y] == TextureTypes::GROUND )
+			{
+				SDL_SetRenderDrawColor(renderer, 77, 55, 39, 255);
+			}
+
+			tileRect.x = x * tileRect.w;
+			tileRect.y = y * tileRect.h;
+			SDL_RenderFillRect(renderer, &tileRect);
+		}
+	}
 }

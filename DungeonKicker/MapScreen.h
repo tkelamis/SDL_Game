@@ -11,21 +11,24 @@
 #include <stdlib.h>
 #include <time.h>
 #include "BattleScreen.h";
+#include <vector>
 
 class MapScreen
 {
 public:
 	inline bool IsQuit() { return quit; }
-	MapScreen(SDL_Renderer* renderer, Hero* hero,int* items);
+	MapScreen(SDL_Renderer* renderer, Hero* hero,std::vector<int> items);
 	~MapScreen();
 
 	void ItemFound();
 	void update();
 	void draw();
-	
+	enum TextureTypes { WALL = 0, GROUND, DOOR, GLOB, CHEST, ROCKTILE, MIMIC  };
+
 
 private:
 	void ScreenMapAndRender();
+	void DrawColors(SDL_Rect tileRect);
 	Hero* hero;
 	SDL_Renderer* renderer;
 	
@@ -33,7 +36,7 @@ private:
 	bool escaped = false;
 	bool quit = false;
 
-	int* items;
+	std::vector<int> inventory;
 	int Map[10][10];
 	MapObject heroObj;
 	MapObject door;
