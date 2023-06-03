@@ -137,8 +137,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Animation.cpp" />
+    <ClCompile Include="AnimationManager.cpp" />
     <ClCompile Include="BattleScreen.cpp" />
     <ClCompile Include="Character.cpp" />
+    <ClCompile Include="CharacterAnimationSet.cpp" />
     <ClCompile Include="CharacterQuiz.cpp" />
     <ClCompile Include="CheckIfNULL.cpp" />
     <ClCompile Include="Glob.cpp" />
@@ -151,9 +154,13 @@
     <ClCompile Include="SystemsInitialization.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Animation.h" />
+    <ClInclude Include="AnimationManager.h" />
     <ClInclude Include="BattleScreen.h" />
     <ClInclude Include="Character.h" />
+    <ClInclude Include="CharacterAnimationSet.h" />
     <ClInclude Include="CharacterQuiz.h" />
+    <ClInclude Include="CharacterType.h" />
     <ClInclude Include="CheckIfNULL.h" />
     <ClInclude Include="Glob.h" />
     <ClInclude Include="Hero.h" />

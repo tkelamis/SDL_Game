@@ -11,7 +11,7 @@ public:
 
 	void SetHP(int hp);
 	void setName(std::string name);
-	std::string getName() override { return ""; }
+	std::string getName() override { return "Elanis"; }
 	void heal(int amount);
 	void atkBoost(int amount);
 	void defBoost(int amount);

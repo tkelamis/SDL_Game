@@ -74,10 +74,12 @@ void MapScreen::update()
 			{
 				int hero_x = heroObj.x;
 				int hero_y = heroObj.y;
+
 				if (sdlEvent.key.keysym.scancode == SDL_SCANCODE_RIGHT) { hero_x++; }
 				if (sdlEvent.key.keysym.scancode == SDL_SCANCODE_LEFT) { hero_x--; }
 				if (sdlEvent.key.keysym.scancode == SDL_SCANCODE_UP) { hero_y--; }
 				if (sdlEvent.key.keysym.scancode == SDL_SCANCODE_DOWN) { hero_y++; }
+
 				if (hero_x >= 0 && hero_x <= 9 && hero_y >= 0 && hero_y <= 9
 					&& Map[hero_x][hero_y] == 1) {
 					heroObj.x = hero_x;
@@ -99,10 +101,10 @@ void MapScreen::update()
 								it->active = false;
 								if (it->type == 3)
 								{
-									/*BattleScreen battle(renderer, hero, items);
+									BattleScreen battle(renderer, hero, inventory);
 									battle.Update();
 									if (battle.quit == true)
-										quit = true;*/
+										quit = true;
 								}
 								else if (it->type == 2)
 								{
