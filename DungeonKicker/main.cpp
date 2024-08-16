@@ -22,8 +22,8 @@
 
 int main(int argc,char** argv)
 {
-	//Quiz();
-	//Setup();
+	Quiz();
+	Setup();
 	Initialize_Systems();
 
 	SDL_Window* window = SDL_CreateWindow("Dungeon Kicker",SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
